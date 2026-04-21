@@ -101,17 +101,22 @@ Cross-sell signals:
 
 ---
 
-## 6. Build Checklist
+## 6. Build Order
 
-- [x] GitHub repo created: red-cars-io/patent-search-mcp
-- [x] Clone from academic-research-mcp template
+**GitHub FIRST, then Apify.**
+
+### 1. GitHub (development)
+- [x] Create GitHub repo: red-cars-io/patent-search-mcp (PUBLIC)
 - [x] Implement 4 tools
-- [x] README (18-section ApifyForge style)
-- [x] llms.txt for AI discovery
-- [ ] Deploy to Apify
-- [ ] Set PPE pricing
-- [ ] Enable standby mode
-- [ ] Test endpoint
+- [x] Write README (18-section ApifyForge style)
+- [x] Write llms.txt for AI discovery
+- [x] Commit and push to GitHub
+
+### 2. Apify (deployment)
+- [ ] `apify push` — deploy from local to Apify
+- [ ] Set PPE pricing — $0.03-0.10 per tool
+- [ ] Enable standby mode — MCP protocol
+- [ ] Make public on Apify Store
 
 ---
 

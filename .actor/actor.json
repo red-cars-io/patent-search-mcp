@@ -1,27 +1,25 @@
 {
   "actorSpecification": 1,
-  "name": "academic-research-mcp",
-  "title": "Academic Research MCP — AI Agent Research Librarian",
-  "description": "Search 600M+ academic papers, grants, and citations for AI agents. One tool call to CrossRef, OpenAlex, Semantic Scholar, DBLP, CORE, PubMed, NIH, and NSF.",
+  "name": "patent-search-mcp",
+  "title": "Patent Search MCP — AI Agent Patent Intelligence",
+  "description": "Search patents across USPTO, EPO, and Google Patents for AI agents. One tool call to find patents, citations, and company landscapes.",
   "version": "1.0",
   "meta": {
-    "templateId": "standby-python"
+    "templateId": "standby-node"
   },
   "input": "../input_schema.json",
   "readme": "../README.md",
   "categories": [
     "DEVELOPER_TOOLS",
-    "EDUCATION"
+    "DATA"
   ],
   "pricing": {
     "model": "EVENT"
   },
   "defaultRunOptions": {
-    "memoryMbytes": 1024,
+    "memoryMbytes": 512,
     "timeoutSecs": 120
   },
-  "webServer": {
-    "enabled": true,
-    "mcpPath": "/mcp"
-  }
+  "usesStandbyMode": true,
+  "webServerMcpPath": "/mcp"
 }
