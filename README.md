@@ -46,92 +46,87 @@ Or with authentication:
 
 ---
 
-## Tools
+## Tool parameters
 
-| Tool | Price | Description |
-|------|-------|-------------|
-| `search_patents` | $0.05 | Search by keyword, CPC code, or inventor |
-| `get_patent_details` | $0.03 | Full metadata, claims, assignee |
-| `find_patent_citations` | $0.05 | Forward/backward citation chain |
-| `patent_landscape_by_company` | $0.10 | Company patent portfolio + filing trends |
+### search_patents
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| query | string | Yes | Search query (keyword, CPC code, inventor name) |
+| max_results | integer | No | Maximum results (default: 10) |
+
+**When to call:** Persona: Tech transfer analyst or patent researcher. Scenario: Finding patents for a specific technology area or inventor to assess prior art or freedom to operate.
+
+**Example AI prompt:** "Search for patents related to neural network attention mechanisms filed between 2020-2025, show 20 results."
 
 ---
 
-## Example Calls
+### get_patent_details
 
-### Search Patents
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| patent_number | string | Yes | Patent number (e.g., US10123456, EP3456789) |
+| source | string | No | Source: uspto, epo, google, all (default: all) |
 
-```
-search_patents(query="neural network transformer", max_results=10)
-```
+**When to call:** Persona: IP lawyer or due diligence analyst. Scenario: Getting full metadata, claims, and assignee information for a specific patent being evaluated in a transaction.
 
-Returns:
-```json
-{
-  "patent_number": "US10712345B2",
-  "title": "Attention mechanism for neural networks",
-  "inventors": ["Vaswani", "Shazeer"],
-  "filing_date": "2017-06-12",
-  "issue_date": "2020-08-25",
-  "assignee": "Google LLC",
-  "source": "USPTO",
-  "url": "https://patents.google.com/patent/US10712345B2"
-}
-```
+**Example AI prompt:** "Get full details for patent US10712345 including the abstract, claims, and assignee information."
 
-### Get Patent Details
+---
 
-```
-get_patent_details(patent_number="US10123456", source="all")
-```
+### find_patent_citations
 
-Returns:
-```json
-{
-  "patent_number": "US10123456",
-  "title": "Medical device with sensor array",
-  "abstract": "A medical device comprising...",
-  "assignee": "Medtronic PLC",
-  "source": "Google Patents",
-  "url": "https://patents.google.com/patent/US10123456",
-  "details_available": true
-}
-```
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| patent_number | string | Yes | Patent number to find citations for |
+| citation_type | string | No | forward, backward, or both (default: both) |
 
-### Find Citations
+**When to call:** Persona: Patent strategist or innovation analyst. Scenario: Tracing citation chains to understand a patent's influence or find potentially infringing downstream patents.
 
-```
-find_patent_citations(patent_number="US10712345B2", citation_type="forward")
-```
+**Example AI prompt:** "Find all forward citations for the original transformer patent US10967890 — show who has cited this patent."
 
-Returns:
-```json
-{
-  "patent_number": "US10712345B2",
-  "forward_citations": [
-    {"patent_number": "US11012345", "source": "forward_citation"},
-    {"patent_number": "EP3456789", "source": "forward_citation"}
-  ],
-  "total": 156
-}
+---
+
+### patent_landscape_by_company
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| company_name | string | Yes | Company name to get patent landscape for |
+| max_results | integer | No | Maximum patents to return (default: 50) |
+
+**When to call:** Persona: VC analyst or corporate development team. Scenario: Assessing a company's patent portfolio to understand their technology positioning, innovation trends, and IP strategy.
+
+**Example AI prompt:** "Give me the full patent landscape for Apple Inc — show filing trends over time, top patents, and main technology areas."
+
+---
+
+## Connection examples
+
+### cURL
+
+```bash
+curl -X POST "https://patent-search-mcp.apify.actor/mcp" \
+  -H "Authorization: Bearer YOUR_APIFY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"tool": "search_patents", "params": {"query": "neural network", "max_results": 5}}'
 ```
 
-### Company Landscape
+### Node.js
 
-```
-patent_landscape_by_company(company_name="Apple Inc", max_results=20)
-```
-
-Returns:
-```json
-{
-  "company_name": "Apple Inc",
-  "total_patents": 247,
-  "filing_trend": {"2020": 45, "2021": 52, "2022": 61, "2023": 89},
-  "top_patents": [...],
-  "technology_areas": ["semiconductor", "display", "wireless"],
-  "sources_searched": ["USPTO", "Google Patents"]
-}
+```javascript
+const response = await fetch('https://patent-search-mcp.apify.actor/mcp', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_APIFY_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    tool: 'patent_landscape_by_company',
+    params: { company_name: 'Apple Inc', max_results: 20 }
+  })
+});
+const data = await response.json();
+console.log(data.result.total_patents);
 ```
 
 ---
@@ -239,6 +234,12 @@ All tools return JSON. Each result includes:
 - `title` — patent title
 - `source` — which database
 - `url` — direct link to record
+
+---
+
+## SEO Keywords
+
+USPTO patent search, EPO patent lookup, Google Patents alternative, patent landscape analysis, freedom to operate, prior art search, patent citation tracking, no API key needed, AI agent, MCP server, patent due diligence automation, IP intelligence for AI agents, tech transfer patent search.
 
 ---
 

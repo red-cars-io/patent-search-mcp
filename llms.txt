@@ -1,6 +1,6 @@
 # Patent Search MCP — AI Agent Patent Intelligence
 
-Search patents across USPTO, EPO, and Google Patents for AI agents.
+Search patents across USPTO, EPO, and Google Patents for AI agents. No API key required.
 
 **MCP Endpoint:** https://patent-search-mcp.apify.actor/mcp
 **Apify Store:** https://apify.com/red.cars/patent-search-mcp
@@ -10,28 +10,24 @@ Search patents across USPTO, EPO, and Google Patents for AI agents.
 ## Tools
 
 ### search_patents
-Search patents by keyword, CPC classification, or inventor name.
-- **Price:** $0.05
-- **Input:** `{"query": "string", "max_results": integer}`
-- **Output:** `[{"patent_number": string, "title": string, "inventors": string[], "filing_date": string, "issue_date": string, "assignee": string, "source": string, "url": string}]`
+**Purpose:** Search patents by keyword, CPC classification, or inventor name across USPTO, EPO, and Google Patents.
+**When to call:** Persona: Tech transfer analyst or patent researcher. Scenario: Finding patents for a specific technology area to assess prior art or freedom to operate before launching a new product.
+**Example AI prompt:** "Search for patents related to neural network attention mechanisms filed between 2020-2025, show 20 results."
 
 ### get_patent_details
-Get full metadata, claims, and citations for a specific patent.
-- **Price:** $0.03
-- **Input:** `{"patent_number": "string", "source": "uspto|epo|google|all"}`
-- **Output:** `{"patent_number": string, "title": string, "abstract": string, "assignee": string, "source": string, "url": string, "details_available": boolean}`
+**Purpose:** Get full metadata, claims, abstract, and assignee information for a specific patent.
+**When to call:** Persona: IP lawyer or due diligence analyst. Scenario: Getting detailed information on a specific patent identified during landscape research to evaluate its claims and validity.
+**Example AI prompt:** "Get full details for patent US10712345 including the abstract, claims, and assignee information."
 
 ### find_patent_citations
-Find forward citations (patents citing this) or backward citations (patents this cites).
-- **Price:** $0.05
-- **Input:** `{"patent_number": "string", "citation_type": "forward|backward|both"}`
-- **Output:** `{"patent_number": string, "forward_citations": array, "backward_citations": array, "total": integer}`
+**Purpose:** Find forward citations (patents citing this) or backward citations (patents this cites).
+**When to call:** Persona: Patent strategist or innovation analyst. Scenario: Tracing citation chains to understand a patent's influence in the industry or identify potential infringement targets.
+**Example AI prompt:** "Find all forward citations for the original transformer patent US10967890 — show who has cited this patent and how many times."
 
 ### patent_landscape_by_company
-Get full patent portfolio for a company including filing trends and technology areas.
-- **Price:** $0.10
-- **Input:** `{"company_name": "string", "max_results": integer}`
-- **Output:** `{"company_name": string, "total_patents": integer, "filing_trend": object, "top_patents": array, "technology_areas": string[], "sources_searched": string[]}`
+**Purpose:** Get full patent portfolio for a company including filing trends, top patents, and technology areas.
+**When to call:** Persona: VC analyst or corporate development team. Scenario: Assessing a company's patent portfolio as part of investment due diligence or acquisition target evaluation.
+**Example AI prompt:** "Give me the full patent landscape for Apple Inc — show filing trends over time, top 20 patents by citations, and main technology areas."
 
 ---
 
@@ -42,17 +38,18 @@ Get full patent portfolio for a company including filing trends and technology a
 {
   "mcpServers": {
     "patent-search-mcp": {
-      "url": "https://patent-search-mcp.apify.actor/mcp?token=YOUR_APIFY_TOKEN"
+      "url": "https://patent-search-mcp.apify.actor/mcp"
     }
   }
 }
 ```
 
+No API key required. AI agents can call tools directly.
+
 ### cURL
 ```bash
 curl -X POST "https://patent-search-mcp.apify.actor/mcp" \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_APIFY_TOKEN" \
   -d '{"tool": "search_patents", "params": {"query": "neural network", "max_results": 5}}'
 ```
 
@@ -77,7 +74,7 @@ curl -X POST "https://patent-search-mcp.apify.actor/mcp" \
 | find_patent_citations | $50.00 |
 | patent_landscape_by_company | $100.00 |
 
-No subscription required. Pay per use via Apify PPE.
+No subscription required. Pay per use via Apify PPE. No API key required.
 
 ## Use Cases
 
@@ -85,6 +82,7 @@ No subscription required. Pay per use via Apify PPE.
 - Patent due diligence
 - Freedom to operate analysis
 - Citation tracking for IP strategy
+- Prior art search for AI agents
 
 ---
 
@@ -104,14 +102,6 @@ healthcare-compliance-mcp → device patents → get_patent_details
 
 ---
 
-## Apify Free Account Usage
+## SEO Keywords
 
-Apify provides free usage credits on all accounts:
-- **Free tier:** Includes credits for testing and small-scale usage
-- **PPE (Pay-Per-Event):** Only charged when tools are actually called
-- **No monthly minimums:** Pay only for what you use
-
-To get started:
-1. Create free Apify account at https://apify.com
-2. Get your API token from https://console.apify.com/account
-3. Pass token as query param: `?token=YOUR_APIFY_TOKEN` or `Authorization: Bearer` header
+USPTO patent search, EPO patent lookup, Google Patents alternative, patent landscape analysis, freedom to operate, prior art search, no API key needed, AI agent, MCP server, patent due diligence automation, IP intelligence
