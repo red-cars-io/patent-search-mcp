@@ -1,5 +1,5 @@
 {
-  "title": "Patent Search MCP",
+  "title": "Patent Lookup MCP",
   "type": "object",
   "schemaVersion": 1,
   "properties": {
@@ -7,16 +7,16 @@
       "title": "Tool Name",
       "type": "string",
       "description": "MCP tool to call",
-      "enum": ["search_patents", "get_patent_details", "find_patent_citations", "patent_landscape_by_company"],
+      "enum": ["get_patent_details", "find_patent_citations", "search_patents", "patent_landscape_by_company"],
       "editor": "select",
-      "prefill": "search_patents"
+      "prefill": "get_patent_details"
     },
     "params": {
       "title": "Parameters (JSON)",
       "type": "object",
       "description": "Tool parameters as JSON object",
       "editor": "json",
-      "prefill": {"query": "machine learning", "max_results": 1}
+      "prefill": {"patent_number": "US10123456"}
     }
   }
 }

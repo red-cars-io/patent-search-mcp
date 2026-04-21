@@ -1,6 +1,6 @@
-# Patent Search MCP Server
+# Patent Lookup MCP Server
 
-> Search patents across USPTO, EPO, and Google Patents for AI agents.
+> Look up patents BY NUMBER — get full details and citation chains for AI agents.
 
 **[View on Apify](https://apify.com/red.cars/patent-search-mcp)** | **[MCP Endpoint](https://patent-search-mcp.apify.actor/mcp)**
 
@@ -8,13 +8,26 @@
 
 ## What It Does
 
-Give AI agents the ability to search patent databases, analyze patent landscapes, and trace citation chains — with one tool call.
+Give AI agents the ability to look up specific patents by number, retrieve full metadata and claims, and trace citation chains.
 
-- **USPTO patents** — full US patent database search
-- **EPO patents** — European Patent Office search
+- **Patent lookup by number** — get full details for a specific patent
+- **Claims and metadata** — abstracts, inventors, assignees, filing dates
+- **Citation tracking** — forward and backward citation chains
 - **Google Patents** — aggregated patent data with citations
-- **Company landscapes** — full patent portfolios by assignee
-- **Citation tracking** — forward and backward citations
+
+---
+
+## Known Limitations
+
+**Keyword search is currently unavailable.** The USPTO, EPO, and Google Patents search APIs are returning errors (404/503/403). To use this MCP, you must already know the patent number you want to look up.
+
+Working features:
+- `get_patent_details` — look up a specific patent by number
+- `find_patent_citations` — trace citation chains for a known patent
+
+Non-operational:
+- `search_patents` — keyword search unavailable (APIs down)
+- `patent_landscape_by_company` — company search unavailable (APIs down)
 
 ---
 
@@ -48,19 +61,6 @@ Or with authentication:
 
 ## Tool parameters
 
-### search_patents
-
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| query | string | Yes | Search query (keyword, CPC code, inventor name) |
-| max_results | integer | No | Maximum results (default: 10) |
-
-**When to call:** Persona: Tech transfer analyst or patent researcher. Scenario: Finding patents for a specific technology area or inventor to assess prior art or freedom to operate.
-
-**Example AI prompt:** "Search for patents related to neural network attention mechanisms filed between 2020-2025, show 20 results."
-
----
-
 ### get_patent_details
 
 | Parameter | Type | Required | Description |
@@ -87,16 +87,31 @@ Or with authentication:
 
 ---
 
+### search_patents
+
+> **UNAVAILABLE** — Keyword search is currently broken (USPTO/EPO/Google APIs returning errors).
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| query | string | Yes | Search query (keyword, CPC code, inventor name) |
+| max_results | integer | No | Maximum results (default: 10) |
+
+**When to call:** Only when keyword search is restored. For now, use `get_patent_details` with a known patent number.
+
+**Example AI prompt:** "Search for patents related to neural network attention mechanisms filed between 2020-2025, show 20 results."
+
+---
+
 ### patent_landscape_by_company
+
+> **UNAVAILABLE** — Company search is currently broken (APIs returning errors).
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | company_name | string | Yes | Company name to get patent landscape for |
 | max_results | integer | No | Maximum patents to return (default: 50) |
 
-**When to call:** Persona: VC analyst or corporate development team. Scenario: Assessing a company's patent portfolio to understand their technology positioning, innovation trends, and IP strategy.
-
-**Example AI prompt:** "Give me the full patent landscape for Apple Inc — show filing trends over time, top patents, and main technology areas."
+**When to call:** Only when company search is restored.
 
 ---
 
@@ -108,7 +123,7 @@ Or with authentication:
 curl -X POST "https://patent-search-mcp.apify.actor/mcp" \
   -H "Authorization: Bearer YOUR_APIFY_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"tool": "search_patents", "params": {"query": "neural network", "max_results": 5}}'
+  -d '{"tool": "get_patent_details", "params": {"patent_number": "US10123456"}}'
 ```
 
 ### Node.js
@@ -121,27 +136,25 @@ const response = await fetch('https://patent-search-mcp.apify.actor/mcp', {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    tool: 'patent_landscape_by_company',
-    params: { company_name: 'Apple Inc', max_results: 20 }
+    tool: 'get_patent_details',
+    params: { patent_number: 'US10123456' }
   })
 });
 const data = await response.json();
-console.log(data.result.total_patents);
+console.log(data.result.title);
 ```
 
 ---
 
 ## How It Works
 
-**Phase 1: Multi-Source Search**
-- Queries USPTO Patent Public Search API
-- Queries Google Patents
-- Queries EPO Open Patent Services (OPS)
-- All queries run in parallel for speed
+**Phase 1: Patent Lookup**
+- Accepts a specific patent number (e.g., US10123456)
+- Fetches data from Google Patents HTML pages
 
-**Phase 2: Deduplication**
-- Removes duplicate patents by number
-- Preserves first-seen metadata
+**Phase 2: Citation Tracing**
+- Parses the /cite page for forward and backward citations
+- Returns structured citation chains
 
 **Phase 3: Aggregation**
 - Returns structured JSON with source attribution
@@ -151,42 +164,42 @@ console.log(data.result.total_patents);
 
 ## Data Sources
 
-| Source | Coverage | Type |
-|--------|----------|------|
-| USPTO | 12M+ US patents | Full text search |
-| EPO | 100M+ worldwide | Patent families |
-| Google Patents | Aggregated | Citations, assignments |
+| Source | Coverage | Status |
+|--------|----------|--------|
+| Google Patents | Aggregated | Working — HTML scraping for details/citations |
+| USPTO | 12M+ US patents | Search unavailable (API returning 404/503) |
+| EPO | 100M+ worldwide | Search unavailable (API returning 403) |
 
 ---
 
 ## Use Cases
 
-### Tech Transfer Evaluation
-*"Find patents from MIT researchers in the AI space"*
-→ AI calls `search_patents` with MIT inventor query → Returns MIT patent portfolio
-
 ### Due Diligence
-*"What's Apple's patent strategy in electric vehicles?"*
-→ AI calls `patent_landscape_by_company` → Returns filing trends, top patents
+*"What's in patent US10712345 — abstract, claims, assignee?"*
+→ AI calls `get_patent_details` with patent number → Returns full metadata
 
 ### Citation Analysis
-*"Who has cited the original transformer patent?"*
+*"Who has cited the original transformer patent US10967890?"*
 → AI calls `find_patent_citations` with citation_type="forward" → Returns citing patents
 
-### Freedom to Operate
-*"Are there blocking patents on our surgical robot design?"*
-→ AI calls `search_patents` with design keywords → Returns relevant patents
+### Prior Art Research (when search is restored)
+*"Find patents from MIT researchers in the AI space"*
+→ AI would call `search_patents` with MIT inventor query → Returns MIT patent portfolio
+
+### Company Landscape (when search is restored)
+*"What's Apple's patent strategy in electric vehicles?"*
+→ AI would call `patent_landscape_by_company` → Returns filing trends, top patents
 
 ---
 
 ## Pricing
 
-| Tool | Price |
-|------|-------|
-| `search_patents` | $0.05/call |
-| `get_patent_details` | $0.03/call |
-| `find_patent_citations` | $0.05/call |
-| `patent_landscape_by_company` | $0.10/call |
+| Tool | Price | Status |
+|------|-------|--------|
+| `get_patent_details` | $0.03/call | Working |
+| `find_patent_citations` | $0.05/call | Working |
+| `search_patents` | $0.05/call | Unavailable |
+| `patent_landscape_by_company` | $0.10/call | Unavailable |
 
 No subscription required. Pay per use via Apify PPE.
 
@@ -222,7 +235,7 @@ Add the same JSON to your AI client config.
 ```bash
 curl -X POST "https://patent-search-mcp.apify.actor/mcp" \
   -H "Content-Type: application/json" \
-  -d '{"tool": "search_patents", "params": {"query": "neural network", "max_results": 5}}'
+  -d '{"tool": "get_patent_details", "params": {"patent_number": "US10123456"}}'
 ```
 
 ---
@@ -239,13 +252,15 @@ All tools return JSON. Each result includes:
 
 ## SEO Keywords
 
-USPTO patent search, EPO patent lookup, Google Patents alternative, patent landscape analysis, freedom to operate, prior art search, patent citation tracking, no API key needed, AI agent, MCP server, patent due diligence automation, IP intelligence for AI agents, tech transfer patent search.
+Patent lookup by number, USPTO patent lookup, EPO patent lookup, Google Patents lookup, patent details API, patent citations API, patent claims lookup, AI agent patent tools, MCP server, IP intelligence for AI agents, patent due diligence automation.
 
 ---
 
 ## API Status
 
 - **Health**: Running
-- **Uptime**: 99.9%
+- **Lookup by number**: Working
+- **Keyword search**: Unavailable (USPTO/EPO/Google APIs returning errors)
+- **Company search**: Unavailable (APIs returning errors)
 - **Rate Limits**: Respect upstream API limits
 - **Support**: Open issue on GitHub

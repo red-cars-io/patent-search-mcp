@@ -1,6 +1,6 @@
-# Patent Search MCP — AI Agent Patent Intelligence
+# Patent Lookup MCP — AI Agent Patent Intelligence
 
-Search patents across USPTO, EPO, and Google Patents for AI agents. No API key required.
+Look up patents by number — get full details, claims, and citation chains for AI agents. No API key required.
 
 **MCP Endpoint:** https://patent-search-mcp.apify.actor/mcp
 **Apify Store:** https://apify.com/red.cars/patent-search-mcp
@@ -9,24 +9,24 @@ Search patents across USPTO, EPO, and Google Patents for AI agents. No API key r
 
 ## Tools
 
-### search_patents
-**Purpose:** Search patents by keyword, CPC classification, or inventor name across USPTO, EPO, and Google Patents.
-**When to call:** Persona: Tech transfer analyst or patent researcher. Scenario: Finding patents for a specific technology area to assess prior art or freedom to operate before launching a new product.
-**Example AI prompt:** "Search for patents related to neural network attention mechanisms filed between 2020-2025, show 20 results."
-
 ### get_patent_details
-**Purpose:** Get full metadata, claims, abstract, and assignee information for a specific patent.
-**When to call:** Persona: IP lawyer or due diligence analyst. Scenario: Getting detailed information on a specific patent identified during landscape research to evaluate its claims and validity.
+**Purpose:** Get full metadata, claims, abstract, and assignee information for a specific patent by number.
+**When to call:** Use when you have a specific patent number and need detailed information. Persona: IP lawyer or due diligence analyst. Scenario: Getting detailed information on a specific patent to evaluate its claims and validity.
 **Example AI prompt:** "Get full details for patent US10712345 including the abstract, claims, and assignee information."
 
 ### find_patent_citations
 **Purpose:** Find forward citations (patents citing this) or backward citations (patents this cites).
-**When to call:** Persona: Patent strategist or innovation analyst. Scenario: Tracing citation chains to understand a patent's influence in the industry or identify potential infringement targets.
+**When to call:** Use when you have a specific patent number and need to trace its citation chain. Persona: Patent strategist or innovation analyst. Scenario: Understanding a patent's influence in the industry or identifying potential infringement targets.
 **Example AI prompt:** "Find all forward citations for the original transformer patent US10967890 — show who has cited this patent and how many times."
+
+### search_patents
+**Purpose:** Search patents by keyword, CPC classification, or inventor name across USPTO, EPO, and Google Patents.
+**When to call:** **Currently unavailable** — the search APIs are returning errors (404/503/403). Do not call this tool. Use `get_patent_details` with a known patent number instead.
+**Example AI prompt:** "Search for patents related to neural network attention mechanisms filed between 2020-2025, show 20 results."
 
 ### patent_landscape_by_company
 **Purpose:** Get full patent portfolio for a company including filing trends, top patents, and technology areas.
-**When to call:** Persona: VC analyst or corporate development team. Scenario: Assessing a company's patent portfolio as part of investment due diligence or acquisition target evaluation.
+**When to call:** **Currently unavailable** — the search APIs are returning errors. Do not call this tool.
 **Example AI prompt:** "Give me the full patent landscape for Apple Inc — show filing trends over time, top 20 patents by citations, and main technology areas."
 
 ---
@@ -50,7 +50,7 @@ No API key required. AI agents can call tools directly.
 ```bash
 curl -X POST "https://patent-search-mcp.apify.actor/mcp" \
   -H "Content-Type: application/json" \
-  -d '{"tool": "search_patents", "params": {"query": "neural network", "max_results": 5}}'
+  -d '{"tool": "get_patent_details", "params": {"patent_number": "US10123456"}}'
 ```
 
 ---
@@ -67,12 +67,12 @@ curl -X POST "https://patent-search-mcp.apify.actor/mcp" \
 
 ## Pricing Summary
 
-| Tool | Per 1,000 Calls |
-|------|-----------------|
-| search_patents | $50.00 |
-| get_patent_details | $30.00 |
-| find_patent_citations | $50.00 |
-| patent_landscape_by_company | $100.00 |
+| Tool | Per Call | Status |
+|------|----------|--------|
+| get_patent_details | $0.03 | Working |
+| find_patent_citations | $0.05 | Working |
+| search_patents | $0.05 | Unavailable |
+| patent_landscape_by_company | $0.10 | Unavailable |
 
 No subscription required. Pay per use via Apify PPE. No API key required.
 
@@ -104,4 +104,4 @@ healthcare-compliance-mcp → device patents → get_patent_details
 
 ## SEO Keywords
 
-USPTO patent search, EPO patent lookup, Google Patents alternative, patent landscape analysis, freedom to operate, prior art search, no API key needed, AI agent, MCP server, patent due diligence automation, IP intelligence
+Patent lookup by number, USPTO patent lookup, EPO patent lookup, Google Patents lookup, patent details API, patent citations API, patent claims lookup, AI agent patent tools, MCP server, IP intelligence for AI agents, patent due diligence automation.
