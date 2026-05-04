@@ -17,6 +17,12 @@ Give AI agents the ability to look up specific patents by number, retrieve full 
 
 ---
 
+## Comparison
+
+- [Comparison: vs Google Patents, USPTO](COMPARISON.md)
+
+---
+
 ## Known Limitations
 
 **Keyword search is currently unavailable.** The USPTO, EPO, and Google Patents search APIs are returning errors (404/503/403). To use this MCP, you must already know the patent number you want to look up.
@@ -252,7 +258,7 @@ All tools return JSON. Each result includes:
 
 ## SEO Keywords
 
-Patent lookup by number, USPTO patent lookup, EPO patent lookup, Google Patents lookup, patent details API, patent citations API, patent claims lookup, AI agent patent tools, MCP server, IP intelligence for AI agents, patent due diligence automation.
+Patent lookup by number, USPTO patent lookup, EPO patent lookup, Google Patents lookup, patent details API, patent citations API, patent claims lookup, AI agent patent tools, MCP server, IP intelligence for AI agents, patent due diligence automation, Google Patents alternative, USPTO patent comparison.
 
 ---
 
